@@ -1,7 +1,7 @@
 /* 헤더 전체 컨테이너 */
 .header-container {
     height: 60px;
-    background-color: #1a1c23; /* 사이드바와 동일하거나 약간 밝게 */
+    background-color: #1a1c23;
     border-bottom: 1px solid #2d3748;
     display: flex;
     justify-content: space-between;
@@ -9,14 +9,14 @@
     padding: 0 20px;
     color: white;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    z-index: 10; /* 다른 요소보다 위에 오도록 */
+    z-index: 10;
 }
 
 /* 왼쪽 영역 (로고) */
 .header-left {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 15px;
 }
 
 .logo-icon {
@@ -28,6 +28,9 @@
     font-weight: bold;
     margin: 0;
     color: #e2e8f0;
+    /* 제목과 뱃지 사이 구분감 */
+    padding-right: 10px;
+    border-right: 1px solid #4a5568;
 }
 
 /* 오른쪽 영역 */
@@ -37,14 +40,14 @@
     gap: 15px;
 }
 
-/* 상태 뱃지 (Live / Offline) */
+/* 상태 뱃지 (기존 스타일 유지하되 마진 제거) */
 .status-badge {
     display: flex;
     align-items: center;
     gap: 6px;
-    padding: 5px 12px;
+    padding: 4px 10px;
     border-radius: 20px;
-    font-size: 0.8rem;
+    font-size: 0.75rem; /* 제목보다 작게 */
     font-weight: bold;
     border: 1px solid transparent;
 }
@@ -62,10 +65,10 @@
 }
 
 .status-dot {
-    width: 8px;
-    height: 8px;
+    width: 6px;
+    height: 6px;
     border-radius: 50%;
-    background-color: currentColor; /* 텍스트 색상 따라감 */
+    background-color: currentColor;
     animation: blink 2s infinite;
 }
 
@@ -76,12 +79,61 @@
     background-color: #4a5568;
 }
 
-/* 로그아웃 버튼 */
+/* ➡️ 오른쪽 영역 (유저정보 + 로그아웃) */
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+/* 사용자 정보 텍스트 */
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 8px; /* 요소 간격 */
+    font-size: 0.9rem;
+    color: #e2e8f0;
+}
+
+.role-badge {
+    font-size: 0.9rem;
+    font-weight: 600;
+    padding: 5px 12px;
+    border-radius: 4px;
+    letter-spacing: 0.5px;
+}
+
+.role-badge.admin {
+    color: #63b3ed;                           /* 파란 글씨 */
+}
+
+.role-badge.user {
+    color: #a0aec0;                             /* 회색 글씨 */
+}
+
+/* 2. 유저명 (아이디) */
+.user-name {
+    font-weight: 600; /* 약간 굵게 */
+    color: #fff;      /* 흰색으로 강조 */
+}
+
+/* 3. '님' 글자 */
+.user-greeting {
+    color: #718096;   /* 어두운 회색으로 힘 빼기 */
+    font-size: 0.85rem;
+}
+
+.divider {
+    width: 1px;
+    height: 16px;
+    background-color: #4a5568;
+}
+
 .logout-btn {
     background: transparent;
     border: 1px solid #4a5568;
     color: #a0aec0;
-    padding: 6px 12px;
+    padding: 5px 12px;
     border-radius: 4px;
     cursor: pointer;
     font-size: 0.8rem;
@@ -90,11 +142,10 @@
 
 .logout-btn:hover {
     background-color: #2d3748;
-    color: white;
+    color: #fff;
     border-color: #cbd5e0;
 }
 
-/* 깜빡임 애니메이션 */
 @keyframes blink {
     0% { opacity: 1; }
     50% { opacity: 0.4; }

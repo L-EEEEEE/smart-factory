@@ -32,6 +32,24 @@ export const loginApi = async (username: string, password: string): Promise<bool
     }
 };
 
+/**
+ * 토큰에서 사용자 아이디(Subject) 추출
+ */
+export const getUsername = (): string => {
+    const token = localStorage.getItem('token');
+    if (!token) return 'GUEST';
+
+    try {
+        // JWT의 페이로드(두 번째 부분)를 디코딩
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        // 보통 'sub'가 아이디입니다. (백엔드 설정에 따라 'username'일 수도 있음)
+        return payload.sub || payload.username || 'User';
+    } catch (error) {
+        console.error("토큰 파싱 실패:", error);
+        return 'Unknown';
+    }
+};
+
 // 👇 권한 정보를 가져오는 함수 추가
 export const getUserRole = (): string | null => {
     const token = localStorage.getItem('token');
