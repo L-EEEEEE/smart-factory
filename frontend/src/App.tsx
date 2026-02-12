@@ -1,105 +1,49 @@
-import React, {useState} from 'react';
-import { useFactorySocket, Machine } from './hooks/useFactorySocket';
-import { FactoryScene } from './components/FactoryScene';
-import { MachineHistoryModal } from './components/MachineHistoryModal';
+import React, {useEffect, useState} from 'react';
+import Dashboard from './components/Dashboard';
+import Login from './components/Login';
+import { getToken } from './api/auth';
 import './App.css';
 
+
 function App() {
-    const { machines, isConnected } = useFactorySocket();
-    // 모달 상태 관리
-    const [selectedMachine, setSelectedMachine] = useState<{id: string, name: string} | null>(null);
-    // 제어 명령 전송 (REST API)
-    const handleControl = async (id: string, command: string) => {
-        try {
-            await fetch(`http://localhost:8080/api/machines/${id}/control`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ command }),
-            });
-            console.log(`Sent command ${command} to ${id}`);
-        } catch (error) {
-            console.error('Failed to control machine:', error);
+    const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+
+    // 1. 앱 실행 시 토큰 있는지 확인
+    useEffect(() => {
+        const token = getToken();
+        if (token) {
+            setIsAuthenticated(true);
         }
+    }, []);
+
+    // 2. 로그인 성공 시 호출
+    const handleLoginSuccess = () => {
+        setIsAuthenticated(true);
     };
 
+    // 3. 로그아웃 (임시 버튼용)
+    const handleLogout = () => {
+        // 토큰 삭제 (출입증 폐기)
+        localStorage.removeItem('token');
+        // 상태 변경 (로그인 화면으로 전환)
+        setIsAuthenticated(false);
+    };
+
+    // 4. 조건부 렌더링
+    if (!isAuthenticated) {
+        return <Login onLoginSuccess={handleLoginSuccess} />;
+    }
+
     return (
-        <div className="dashboard-container">
-            <header className="header">
-                <h1>🏭 Smart Factory Monitor</h1>
-                <div className={`status-indicator ${isConnected ? 'online' : 'offline'}`}>
-                    {isConnected ? 'LIVE CONNECTED' : 'DISCONNECTED'}
-                </div>
-            </header>
-
-            {/* 👇 3D 공장 화면 배치 */}
-            <section className="digital-twin-section">
-                <FactoryScene machines={machines} />
-            </section>
-
-            {/* 2D 카드 리스트 */}
-            <div className="grid-layout">
-                {machines.map((machine) => (
-                    <div key={machine.id} onClick={() => setSelectedMachine({ id: machine.id, name: machine.name })} style={{ cursor: 'pointer' }}>
-                        {/* 기존 MachineCard 컴포넌트를 div로 감싸서 클릭 이벤트를 걸었습니다.
-                             MachineCard 내부의 버튼(Control) 클릭 시에는 e.stopPropagation()이 필요할 수 있습니다.
-                         */}
-                        <MachineCard
-                            machine={machine}
-                            onControl={handleControl}
-                        />
-                    </div>
-                ))}
-            </div>
-            {/* 👇 모달 컴포넌트 (선택된 기계가 있을 때만 렌더링) */}
-            {selectedMachine && (
-                <MachineHistoryModal
-                    machineId={selectedMachine.id}
-                    machineName={selectedMachine.name}
-                    onClose={() => setSelectedMachine(null)}
-                />
+        <div className="app-root">
+            {isAuthenticated ? (
+                // 3. Dashboard에 로그아웃 함수를 전달
+                <Dashboard onLogout={handleLogout} />
+            ) : (
+                <Login onLoginSuccess={handleLoginSuccess} />
             )}
         </div>
     );
 }
-
-// 개별 기계 카드 컴포넌트
-const MachineCard = ({ machine, onControl }: { machine: Machine, onControl: any }) => {
-    // 상태에 따른 색상 클래스 결정
-    const statusClass = machine.status.toLowerCase();
-
-    return (
-        <div className={`card ${statusClass}`}>
-            <div className="card-header">
-                <h3>{machine.name}</h3>
-                <span className="badge">{machine.status}</span>
-            </div>
-
-            <div className="card-body">
-                <div className="metric">
-                    <span>Temp</span>
-                    <strong>{machine.temperature}°C</strong>
-                </div>
-                <div className="metric">
-                    <span>RPM</span>
-                    <strong>{machine.rpm}</strong>
-                </div>
-                <div className="metric">
-                    <span>Vibration</span>
-                    <strong>{machine.vibration} Hz</strong>
-                </div>
-                <div className="metric">
-                    <span>Production</span>
-                    <strong>{machine.productionCount} ea</strong>
-                </div>
-            </div>
-
-            <div className="card-actions">
-                <button onClick={() => onControl(machine.id, 'START')} disabled={machine.status === 'RUNNING'}>START</button>
-                <button onClick={() => onControl(machine.id, 'STOP')} disabled={machine.status === 'STOPPED'}>STOP</button>
-                <button onClick={() => onControl(machine.id, 'RESET')} className="reset-btn">RESET</button>
-            </div>
-        </div>
-    );
-};
 
 export default App;

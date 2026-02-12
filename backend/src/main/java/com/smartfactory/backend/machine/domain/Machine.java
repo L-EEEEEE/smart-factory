@@ -1,4 +1,4 @@
-package com.smartfactory.backend.domain;
+package com.smartfactory.backend.machine.domain;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

@@ -1,0 +1,27 @@
+spring:
+  datasource:
+    # 1. 주소: 메모리(mem)에서 동작하며, PostgreSQL 문법 모드 사용
+    url: jdbc:h2:mem:testdb;MODE=PostgreSQL
+
+    # 2. 드라이버: H2 드라이버 사용
+    driver-class-name: org.h2.Driver
+
+    # 3. 계정: H2 기본 계정 (비밀번호 없음)
+    username: sa
+    password:
+
+  jpa:
+    # 4. DB 초기화: 테스트 시작 때 테이블 만들고(create), 끝나면 삭제(drop)
+    hibernate:
+      ddl-auto: create-drop
+
+    # 5. SQL 로그 보기 (선택사항)
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+# 6. JWT 비밀키 (테스트용 가짜 키)
+jwt:
+  secret: test_secret_key_must_be_long_enough_for_security_tests_1234
+  expiration=3600000

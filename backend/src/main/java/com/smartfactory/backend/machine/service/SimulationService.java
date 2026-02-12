@@ -1,15 +1,15 @@
-package com.smartfactory.backend.service;
+package com.smartfactory.backend.machine.service;
 
-import com.smartfactory.backend.repository.MachineRepository;
-import com.smartfactory.backend.domain.Machine;
+import com.smartfactory.backend.machine.repository.MachineRepository;
+import com.smartfactory.backend.machine.domain.Machine;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-import com.smartfactory.backend.domain.MachineLog;
-import com.smartfactory.backend.repository.MachineLogRepository;
+import com.smartfactory.backend.machine.domain.MachineLog;
+import com.smartfactory.backend.machine.repository.MachineLogRepository;
 
 import jakarta.annotation.PostConstruct;
 

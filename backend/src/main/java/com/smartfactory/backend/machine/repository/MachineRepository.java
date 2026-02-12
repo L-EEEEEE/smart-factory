@@ -1,6 +1,6 @@
-package com.smartfactory.backend.repository;
+package com.smartfactory.backend.machine.repository;
 
-import com.smartfactory.backend.domain.Machine;
+import com.smartfactory.backend.machine.domain.Machine;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

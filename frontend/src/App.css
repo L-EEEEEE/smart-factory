@@ -237,3 +237,32 @@ button:disabled {
   from { transform: translateY(20px); opacity: 0; }
   to { transform: translateY(0); opacity: 1; }
 }
+
+/* ... 기존 CSS 하단에 추가 ... */
+
+/* 헤더 우측 그룹 (표시등과 버튼 나란히) */
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 15px; /* 요소 사이 간격 */
+}
+
+/* 로그아웃 버튼 스타일 */
+.logout-btn {
+  background-color: transparent;
+  border: 1px solid #ff6b6b; /* 빨간 테두리 */
+  color: #ff6b6b;            /* 빨간 글씨 */
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 0.8rem;
+  transition: all 0.3s ease;
+}
+
+/* 마우스 올렸을 때 */
+.logout-btn:hover {
+  background-color: #ff6b6b;
+  color: white; /* 배경이 빨개지고 글씨는 하얗게 */
+  box-shadow: 0 0 10px rgba(255, 107, 107, 0.5);
+}

@@ -19,3 +19,7 @@ spring:
 
   main:
     allow-circular-references: true
+
+jwt:
+  secret: ${JWT_SECRET}
+  expiration: ${JWT_EXPIRATION_MS}

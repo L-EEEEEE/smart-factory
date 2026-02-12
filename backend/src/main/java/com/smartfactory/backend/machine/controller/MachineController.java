@@ -1,9 +1,9 @@
-package com.smartfactory.backend.controller;
+package com.smartfactory.backend.machine.controller;
 
-import com.smartfactory.backend.domain.MachineLog;
-import com.smartfactory.backend.repository.MachineLogRepository;
-import com.smartfactory.backend.domain.Machine;
-import com.smartfactory.backend.service.SimulationService;
+import com.smartfactory.backend.machine.domain.MachineLog;
+import com.smartfactory.backend.machine.repository.MachineLogRepository;
+import com.smartfactory.backend.machine.domain.Machine;
+import com.smartfactory.backend.machine.service.SimulationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
@@ -12,7 +12,6 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/machines")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "*") // 🌍 React(5173)에서 오는 요청 허용 (필수!)
 public class MachineController {
 
     private final SimulationService simulationService;

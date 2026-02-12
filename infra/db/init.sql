@@ -27,7 +27,7 @@ CREATE TABLE IF NOT EXISTS machine_logs (
 
 CREATE INDEX IF NOT EXISTS idx_machine_logs_time ON machine_logs(machine_id, recorded_at DESC);
 
--- ✅ PCB 공정(SMT Line) 초기 데이터 삽입
+-- PCB 공정(SMT Line) 초기 데이터 삽입
 -- Reflow Oven은 온도가 높아야 하고(240도), Mounter는 RPM이 높아야 함.
 INSERT INTO machines (id, name, type, status, temperature, vibration, rpm, power_usage, production_count, last_maintenance) VALUES
     ('MAC-1000', 'Solder Printer #1', 'PRINTER', 'RUNNING', 25.5, 1.2, 500, 120.5, 1540, NOW()),
@@ -40,3 +40,17 @@ ON CONFLICT (id) DO UPDATE SET
     type = EXCLUDED.type,
     status = EXCLUDED.status,
     temperature = EXCLUDED.temperature;
+
+
+-- 회원 테이블 생성
+CREATE TABLE IF NOT EXISTS members (
+                                       username VARCHAR(50) PRIMARY KEY,
+                                       password VARCHAR(255) NOT NULL,
+                                       role VARCHAR(20) NOT NULL
+);
+
+-- 초기 관리자(Admin) 계정 삽입
+-- 아이디: admin, 비번: 1234 (앞에 {noop}은 "암호화 안 된 문자 그대로"라는 뜻)
+INSERT INTO members (username, password, role)
+VALUES ('admin', '{noop}1234', 'ROLE_ADMIN')
+ON CONFLICT (username) DO NOTHING;

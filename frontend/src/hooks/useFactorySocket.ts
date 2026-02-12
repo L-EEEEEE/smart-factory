@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import SockJS from 'sockjs-client';
 import { Client } from '@stomp/stompjs';
 
-// 타입 정의 (Backend의 Machine.java와 일치해야 함)
+// 타입 정의
 export interface Machine {
     id: string;
     name: string;
@@ -21,37 +21,64 @@ export const useFactorySocket = () => {
     const [isConnected, setIsConnected] = useState(false);
 
     useEffect(() => {
-        // 1. [핵심] 접속하자마자 REST API로 현재 상태 가져오기 (이게 없어서 빈 화면이었음!)
+        // 0. [로그인 체크] 로컬 스토리지에서 토큰 가져오기
+        const token = localStorage.getItem('token');
+
+        if (!token) {
+            console.warn("🔒 로그인이 필요합니다. (토큰 없음)");
+            return; // 토큰이 없으면 연결 시도하지 않음
+        }
+
+        // 1. [초기 데이터] REST API 요청 시 토큰 실어 보내기
         const fetchInitialData = async () => {
             try {
-                const response = await fetch('http://localhost:8080/api/machines');
-                const data = await response.json();
-                console.log("📢 초기 데이터 로드 완료:", data); // F12 콘솔에서 확인해보세요
-                setMachines(data);
+                const response = await fetch('/api/machines', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}` // 👈 핵심: 토큰 추가
+                    }
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    console.log("초기 데이터 로드 완료:", data);
+                    setMachines(data);
+                } else {
+                    console.error("초기 데이터 로드 실패 (권한 없음 또는 에러)");
+                }
             } catch (error) {
-                console.error("❌ 초기 데이터 로드 실패:", error);
+                console.error("초기 데이터 로드 중 네트워크 오류:", error);
             }
         };
 
-        fetchInitialData(); // 함수 실행
+        fetchInitialData();
 
-        // 2. WebSocket 연결 설정 (실시간 업데이트용)
-        const socket = new SockJS('http://localhost:8080/ws-factory');
+        // 2. [WebSocket 연결] 연결 시 헤더에 토큰 추가
+        const socket = new SockJS('/ws-factory');
         const stompClient = new Client({
             webSocketFactory: () => socket,
+
+            // 👇 핵심: 소켓 연결 시 토큰 인증 정보 보내기
+            connectHeaders: {
+                Authorization: `Bearer ${token}`,
+            },
+
             debug: (str) => {
-                // console.log(str); // 디버깅 로그가 너무 많으면 주석 처리
+                // console.log(str);
             },
             onConnect: () => {
-                console.log('✅ WebSocket Connected!');
+                console.log('WebSocket Connected!');
                 setIsConnected(true);
 
-                // 실시간 데이터 구독
                 stompClient.subscribe('/topic/factory', (message) => {
                     if (message.body) {
-                        const updatedMachines: Machine[] = JSON.parse(message.body);
-                        // console.log("⚡ 실시간 데이터 수신:", updatedMachines);
-                        setMachines(updatedMachines);
+                        try {
+                            const updatedMachines: Machine[] = JSON.parse(message.body);
+                            setMachines(updatedMachines);
+                        } catch (e) {
+                            console.error("JSON 파싱 에러:", e);
+                        }
                     }
                 });
             },
@@ -60,7 +87,7 @@ export const useFactorySocket = () => {
                 console.error('Additional details: ' + frame.body);
             },
             onWebSocketClose: () => {
-                console.log('❌ WebSocket Disconnected');
+                console.log('WebSocket Disconnected');
                 setIsConnected(false);
             },
         });
@@ -70,7 +97,7 @@ export const useFactorySocket = () => {
         return () => {
             stompClient.deactivate();
         };
-    }, []);
+    }, []); // 빈 배열: 컴포넌트 마운트 시 한 번만 실행
 
     return { machines, isConnected };
 };

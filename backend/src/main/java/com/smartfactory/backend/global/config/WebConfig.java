@@ -1,4 +1,4 @@
-package com.smartfactory.backend.config;
+package com.smartfactory.backend.global.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;

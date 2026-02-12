@@ -1,6 +1,6 @@
-package com.smartfactory.backend.config;
+package com.smartfactory.backend.global.config;
 
-import com.smartfactory.backend.aop.TimeTraceAop;
+import com.smartfactory.backend.global.aop.TimeTraceAop;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
