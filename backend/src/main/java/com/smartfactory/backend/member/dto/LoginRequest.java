@@ -1,4 +1,4 @@
-package com.smartfactory.backend.global.dto;
+package com.smartfactory.backend.member.dto;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

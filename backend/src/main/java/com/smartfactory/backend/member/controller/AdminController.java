@@ -1,6 +1,6 @@
 package com.smartfactory.backend.member.controller;
 
-import com.smartfactory.backend.global.dto.SignupRequest;
+import com.smartfactory.backend.member.dto.SignupRequest;
 import com.smartfactory.backend.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

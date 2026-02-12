@@ -1,7 +1,7 @@
 package com.smartfactory.backend.member.controller;
 
 import com.smartfactory.backend.global.config.JwtTokenProvider;
-import com.smartfactory.backend.global.dto.LoginRequest;
+import com.smartfactory.backend.member.dto.LoginRequest;
 import com.smartfactory.backend.member.domain.Member;
 import com.smartfactory.backend.member.repository.MemberRepository;
 import com.smartfactory.backend.member.service.MemberService;
@@ -9,8 +9,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/auth")

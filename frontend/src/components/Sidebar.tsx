@@ -2,6 +2,7 @@ import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { getUserRole } from '../api/auth';
 import { MENU_ITEMS } from '../constants/MenuItem';
+import './Sidebar.css';
 
 interface SidebarProps {
     isOpen: boolean;

@@ -2,16 +2,23 @@ import { useEffect, useState } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import Dashboard from './components/Dashboard';
 import Login from './components/Login';
-import ProtectedRoute from './components/ProtectedRoute'; // 방금 만든 컴포넌트
+import ProtectedRoute from './components/ProtectedRoute';
+import MaterialList from './components/MaterialList';
 import { getToken, logoutApi } from './api/auth';
 import './App.css';
+import Sidebar from "./components/Sidebar.tsx";
+import Header from "./components/Header.tsx";
+import { useFactorySocket } from "./hooks/useFactorySocket.ts";
 
-// 임시로 만든 자재/단가 페이지 컴포넌트 (나중에 별도 파일로 만드세요)
-const InventoryIn = () => <div style={{padding: "20px", color: "white"}}><h2>자재 입고 관리 (관리자 전용)</h2></div>;
-const Pricing = () => <div style={{padding: "20px", color: "white"}}><h2>단가표 관리 (관리자 전용)</h2></div>;
+const Pricing = () => <div style={{ padding: "20px", color: "white" }}><h2>단가표 관리 (관리자 전용)</h2></div>;
 
 function App() {
     const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+    // 사이드바 열림/닫힘 상태 (반응형을 위해)
+    const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+
+    // 소켓은 로그인 된 상태에서만 연결하는 것이 좋으므로 조건부 처리 가능 (선택사항)
+    const { machines, isConnected } = useFactorySocket();
 
     useEffect(() => {
         const token = getToken();
@@ -25,55 +32,72 @@ function App() {
     };
 
     const handleLogout = () => {
-        logoutApi(); // 로컬 스토리지 토큰 삭제
+        logoutApi();
         setIsAuthenticated(false);
     };
 
     return (
         <BrowserRouter>
             <div className="app-root">
-                <Routes>
-                    {/* 1. 로그인 페이지: 이미 로그인했다면 메인으로 리다이렉트 */}
-                    <Route
-                        path="/login"
-                        element={
-                            isAuthenticated ? <Navigate to="/" replace /> : <Login onLoginSuccess={handleLoginSuccess} />
-                        }
-                    />
+                {/* 1. 로그인 된 상태에서만 헤더 표시 */}
+                {isAuthenticated && <Header isConnected={isConnected} onLogout={handleLogout} />}
 
-                    {/* 2. 메인 대시보드: 모든 로그인 사용자 접근 가능 */}
-                    <Route
-                        path="/"
-                        element={
-                            <ProtectedRoute>
-                                <Dashboard onLogout={handleLogout} />
-                            </ProtectedRoute>
-                        }
-                    />
+                <div className="main-container">
+                    {/* 2. 로그인 된 상태에서만 사이드바 표시 (Routes 바깥으로 뺌!) */}
+                    {isAuthenticated && (
+                        <Sidebar
+                            isOpen={isSidebarOpen}
+                            toggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)}
+                        />
+                    )}
 
-                    {/* 3. 자재 입고: 인사관리자(ADMIN)만 접근 가능 */}
-                    <Route
-                        path="/inventory/in"
-                        element={
-                            <ProtectedRoute allowedRoles={['ROLE_ADMIN']}>
-                                <InventoryIn />
-                            </ProtectedRoute>
-                        }
-                    />
+                    {/* 3. 오른쪽 콘텐츠 영역 */}
+                    <main className="content-area">
+                        <Routes>
+                            {/* 로그인 페이지 */}
+                            <Route
+                                path="/login"
+                                element={
+                                    isAuthenticated ? <Navigate to="/" replace /> : <Login onLoginSuccess={handleLoginSuccess} />
+                                }
+                            />
 
-                    {/* 4. 단가표: 인사관리자(ADMIN)만 접근 가능 */}
-                    <Route
-                        path="/pricing"
-                        element={
-                            <ProtectedRoute allowedRoles={['ROLE_ADMIN']}>
-                                <Pricing />
-                            </ProtectedRoute>
-                        }
-                    />
+                            {/* === 보호된 라우트들 === */}
+                            {/* Dashboard */}
+                            <Route
+                                path="/"
+                                element={
+                                    <ProtectedRoute>
+                                        <Dashboard machines={machines} />
+                                    </ProtectedRoute>
+                                }
+                            />
 
-                    {/* 5. 잘못된 경로로 접근 시 메인으로 이동 */}
-                    <Route path="*" element={<Navigate to="/" replace />} />
-                </Routes>
+                            {/* 자재 입고 */}
+                            <Route
+                                path="/inventory/in"
+                                element={
+                                    <ProtectedRoute>
+                                        <MaterialList />
+                                    </ProtectedRoute>
+                                }
+                            />
+
+                            {/* 단가표 관리 */}
+                            <Route
+                                path="/pricing"
+                                element={
+                                    <ProtectedRoute allowedRoles={['ROLE_ADMIN']}>
+                                        <Pricing />
+                                    </ProtectedRoute>
+                                }
+                            />
+
+                            {/* 잘못된 경로는 홈으로 */}
+                            <Route path="*" element={<Navigate to="/" replace />} />
+                        </Routes>
+                    </main>
+                </div>
             </div>
         </BrowserRouter>
     );

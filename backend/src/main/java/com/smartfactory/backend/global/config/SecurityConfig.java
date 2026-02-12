@@ -2,6 +2,8 @@ package com.smartfactory.backend.global.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -41,7 +43,7 @@ public class SecurityConfig {
                 .formLogin(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
 
-                // 3. 권한 규칙 설정 (순서가 매우 중요합니다!)
+                // 3. 권한 규칙 설정 (순서 매우 중요)
                 .authorizeHttpRequests(auth -> auth
                         // Preflight(OPTIONS) 요청은 토큰 없어도 무조건 허용
                         .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
@@ -49,17 +51,19 @@ public class SecurityConfig {
                         // 로그인, 회원가입, WebSocket 연결 주소는 누구나 접근 가능
                         .requestMatchers("/api/auth/**", "/ws-factory/**", "/api/machines/**").permitAll()
 
+                        .requestMatchers(HttpMethod.GET, "/api/materials/**").authenticated()
+
                         // 관리자 페이지는 ADMIN만
                         .requestMatchers("/api/inventory/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/api/materials/**").hasRole("ADMIN")
                         .requestMatchers("/api/pricing/**").hasRole("ADMIN")
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
 
                         // 나머지는 인증 필요
                         .anyRequest().authenticated()
-                );
-
-        // (JWT 필터 추가 코드가 있다면 여기에 작성)
-        // .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
+                )
+                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider),
+                        UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }

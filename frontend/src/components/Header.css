@@ -1,0 +1,102 @@
+/* 헤더 전체 컨테이너 */
+.header-container {
+    height: 60px;
+    background-color: #1a1c23; /* 사이드바와 동일하거나 약간 밝게 */
+    border-bottom: 1px solid #2d3748;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+    color: white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    z-index: 10; /* 다른 요소보다 위에 오도록 */
+}
+
+/* 왼쪽 영역 (로고) */
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.logo-icon {
+    font-size: 1.5rem;
+}
+
+.app-title {
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin: 0;
+    color: #e2e8f0;
+}
+
+/* 오른쪽 영역 */
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+/* 상태 뱃지 (Live / Offline) */
+.status-badge {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    border: 1px solid transparent;
+}
+
+.status-badge.online {
+    background-color: rgba(72, 187, 120, 0.1);
+    color: #48bb78;
+    border-color: #48bb78;
+}
+
+.status-badge.offline {
+    background-color: rgba(245, 101, 101, 0.1);
+    color: #f56565;
+    border-color: #f56565;
+}
+
+.status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: currentColor; /* 텍스트 색상 따라감 */
+    animation: blink 2s infinite;
+}
+
+/* 구분선 */
+.divider {
+    width: 1px;
+    height: 24px;
+    background-color: #4a5568;
+}
+
+/* 로그아웃 버튼 */
+.logout-btn {
+    background: transparent;
+    border: 1px solid #4a5568;
+    color: #a0aec0;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    transition: all 0.2s;
+}
+
+.logout-btn:hover {
+    background-color: #2d3748;
+    color: white;
+    border-color: #cbd5e0;
+}
+
+/* 깜빡임 애니메이션 */
+@keyframes blink {
+    0% { opacity: 1; }
+    50% { opacity: 0.4; }
+    100% { opacity: 1; }
+}

@@ -1,92 +1,57 @@
 import React, { useState } from 'react';
-import { useFactorySocket } from '../hooks/useFactorySocket';
 import FactoryScene from './FactoryScene';
 import DashboardUI from './DashboardUI';
 import { MachineHistoryModal } from './MachineHistoryModal';
-import Sidebar from './Sidebar'; // 👈 사이드바 컴포넌트 임포트
-import './Sidebar.css';
+import { sendMachineCommand } from '../api/machineApi';
+import type { Machine } from "../types";
+import './Dashboard.css';
 
 interface DashboardProps {
-    onLogout: () => void;
+    machines: Machine[];
 }
 
-const Dashboard: React.FC<DashboardProps> = ({ onLogout }) => {
-
-    // 사이드바 열림/닫힘 상태 관리 (기본값: true/열림)
-    const [isSidebarOpen, setIsSidebarOpen] = useState(true);
-
-    // 1. 데이터 통신
-    const { machines, isConnected } = useFactorySocket();
-    // 2. 상태 관리
+const Dashboard: React.FC<DashboardProps> = ({ machines }) => {
     const [selectedMachine, setSelectedMachine] = useState<{ id: string, name: string } | null>(null);
 
-    // 3. 제어 로직
     const handleControl = async (id: string, command: string) => {
-        const token = localStorage.getItem('token');
         try {
-            await fetch(`http://localhost:8080/api/machines/${id}/control`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': token ? `Bearer ${token}` : ''
-                },
-                body: JSON.stringify({ command }),
-            });
-            console.log(`Sent command ${command} to ${id}`);
+            await sendMachineCommand(id, command);
+            alert(`[${id}] 명령 전송 성공`);
         } catch (error) {
-            console.error('Failed to control machine:', error);
+            console.error(error);
+            alert('명령 전송 실패');
         }
     };
 
     return (
-        <div className="dashboard-layout">
-            {/* ⬅️ 좌측: 사이드바 영역 */}
-            <Sidebar isOpen={isSidebarOpen} toggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)} />
+        <div className="dashboard-container">
+            {/* 1. 상단: 3D 관제 화면 (높이 50% ~ 60%) */}
+            <div className="top-section">
+                <FactoryScene machines={machines} />
+            </div>
 
-            {/* ➡️ 우측: 메인 컨텐츠 영역 */}
-            <main className="main-content">
-
-                {/* 1. 상단 헤더 (메인 컨텐츠 내부에 위치) */}
-                <header className="header">
-                    <h1>🏭 Smart Factory Monitor</h1>
-                    <div className="header-right">
-                        <div className={`status-indicator ${isConnected ? 'online' : 'offline'}`}>
-                            {isConnected ? 'LIVE' : 'OFFLINE'}
-                        </div>
-
-                        {/* 로그아웃 버튼 */}
-                        <button onClick={onLogout} className="logout-btn">
-                            LOGOUT
-                        </button>
-                    </div>
-                </header>
-
-                {/* 2. 실제 작업 영역 (3D 씬 + UI) */}
-                <div className="content-area">
-                    {/* 🟦 레이어 1: 3D 배경 */}
-                    <div className="scene-layer">
-                        <FactoryScene machines={machines} />
-                    </div>
-
-                    {/* 🟧 레이어 2: 2D UI (카드 리스트) */}
-                    <DashboardUI
-                        machines={machines}
-                        onControl={handleControl}
-                        onSelectMachine={setSelectedMachine}
-                    />
-
-                    {/* 🟪 레이어 3: 모달 (최상단) */}
-                    {selectedMachine && (
-                        <div style={{ position: 'absolute', zIndex: 100, top: 0, left: 0, width: '100%', height: '100%' }}>
-                            <MachineHistoryModal
-                                machineId={selectedMachine.id}
-                                machineName={selectedMachine.name}
-                                onClose={() => setSelectedMachine(null)}
-                            />
-                        </div>
-                    )}
+            {/* 2. 하단: 제어 패널 및 카드 리스트 (나머지 영역) */}
+            <div className="bottom-section">
+                <div className="section-title">
+                    <h3>📊 실시간 기계 상태</h3>
                 </div>
-            </main>
+                <DashboardUI
+                    machines={machines}
+                    onControl={handleControl}
+                    onSelectMachine={setSelectedMachine}
+                />
+            </div>
+
+            {/* 3. 모달 (화면 최상단) */}
+            {selectedMachine && (
+                <div className="modal-overlay">
+                    <MachineHistoryModal
+                        machineId={selectedMachine.id}
+                        machineName={selectedMachine.name}
+                        onClose={() => setSelectedMachine(null)}
+                    />
+                </div>
+            )}
         </div>
     );
 };
