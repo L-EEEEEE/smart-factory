@@ -8,39 +8,39 @@
 ## 🚀 주요 기능 (Key Features)
 
 ### 1. 3D Digital Twin Visualization
-* **Three.js (R3F)**를 활용하여 실제 공장 내부를 3D로 모델링하였습니다.
-* 서버의 실시간 장비 상태(Status)에 따라 기계의 회전 애니메이션 및 색상 변화를 실시간으로 반영합니다.
+- **Three.js (R3F)**를 활용하여 실제 공장 내부를 3D로 모델링하였습니다.
+- 서버의 실시간 장비 상태(Status)에 따라 기계의 회전 애니메이션 및 색상 변화를 실시간으로 반영합니다.
 
 ### 2. Real-time Monitoring (WebSocket)
-* **Spring WebSocket(STOMP)**을 사용하여 1초 단위의 장비 데이터(온도, 진동, RPM, 전력량)를 동기화합니다.
-* 사용자는 브라우저 새로고침 없이 실시간으로 업데이트되는 대시보드를 확인할 수 있습니다.
+- **Spring WebSocket(STOMP)**을 사용하여 1초 단위의 장비 데이터(온도, 진동, RPM, 전력량)를 동기화합니다.
+- 사용자는 브라우저 새로고침 없이 실시간으로 업데이트되는 대시보드를 확인할 수 있습니다.
 
 ### 3. Quality History Analysis
-* **Recharts**를 활용하여 장비별 센서 이력을 시각화합니다.
-* PCB 품질의 핵심인 **Reflow Oven 온도 프로파일** 및 **Mounter 진동 추세** 분석 기능을 제공합니다.
+- **Recharts**를 활용하여 장비별 센서 이력을 시각화합니다.
+- PCB 품질의 핵심인 **Reflow Oven 온도 프로파일** 및 **Mounter 진동 추세** 분석 기능을 제공합니다.
 
 ### 4. Smart Factory Operation
-* REST API를 통해 개별 장비를 원격으로 제어(START / STOP)할 수 있습니다.
-* **PostgreSQL**을 사용하여 장비 마스터 데이터 및 로그 데이터 이력을 체계적으로 관리합니다.
+- REST API를 통해 개별 장비를 원격으로 제어(START / STOP)할 수 있습니다.
+- **PostgreSQL**을 사용하여 장비 마스터 데이터 및 로그 데이터 이력을 체계적으로 관리합니다.
 
 ---
 
 ## 🛠 Tech Stack
 
 ### Backend
-* **Java 17 / Spring Boot 3.4.2**
-* **Spring Data JPA**
-* **Spring WebSocket (STOMP)**
-* **PostgreSQL**
+- **Java 17 / Spring Boot 3.4.2**
+- **Spring Data JPA**
+- **Spring WebSocket (STOMP)**
+- **PostgreSQL**
 
 ### Frontend
-* **React (TypeScript)**
-* **Three.js / React Three Fiber**
-* **Recharts** (Data Visualization)
-* **CSS3** (Responsive Dashboard Layout)
+- **React (TypeScript)**
+- **Three.js / React Three Fiber**
+- **Recharts** (Data Visualization)
+- **CSS3** (Responsive Dashboard Layout)
 
 ### Infrastructure
-* **Docker & Docker Compose**
+- **Docker & Docker Compose**
 
 ---
 
