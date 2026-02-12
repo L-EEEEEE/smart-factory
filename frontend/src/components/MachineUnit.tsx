@@ -3,7 +3,7 @@ import React, { useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { Text } from '@react-three/drei';
 import * as THREE from 'three';
-import { Machine } from '../types'; // Dashboard에서 타입 가져오기 (또는 types.ts)
+import type {Machine} from '../types'; // Dashboard에서 타입 가져오기 (또는 types.ts)
 
 interface MachineUnitProps {
     data: Machine;
@@ -27,7 +27,7 @@ const MachineUnit: React.FC<MachineUnitProps> = ({ data, position }) => {
     };
 
     // 애니메이션 루프 (매 프레임마다 실행됨)
-    useFrame((state, delta) => {
+    useFrame((_state, delta) => {
         // 기계가 RUNNING 상태일 때만 회전
         if (rotorRef.current && data.status === 'RUNNING') {
             // RPM에 비례하여 회전 속도 조절
@@ -56,7 +56,7 @@ const MachineUnit: React.FC<MachineUnitProps> = ({ data, position }) => {
             {/* 1. 📦 기계 몸체 (아래쪽 고정된 박스) */}
             <mesh position={[0, 0.5, 0]}>
                 <boxGeometry args={[1.2, 1, 1.2]} />
-                <meshStandardMaterial color="#2d3436" roughnes={0.5} metalness={0.5} />
+                <meshStandardMaterial color="#2d3436" roughness={0.5} metalness={0.5} />
             </mesh>
 
             {/* 2. 🚦 상태 표시등 (몸체 위의 띠) */}

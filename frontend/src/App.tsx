@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import {useEffect, useState} from 'react';
 import Dashboard from './components/Dashboard';
 import Login from './components/Login';
 import { getToken } from './api/auth';

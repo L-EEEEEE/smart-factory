@@ -1,12 +1,11 @@
 import React from 'react';
-import { Machine } from '../types'; // types.ts에서 타입 가져오기
+import type {Machine} from '../types'; // types.ts에서 타입 가져오기
 import '../App.css'; // 스타일
 
 interface DashboardUIProps {
     machines: Machine[];
     onControl: (id: string, command: string) => void;
     onSelectMachine: (machine: { id: string, name: string }) => void;
-    onLogout: () => void;
 }
 
 const DashboardUI: React.FC<DashboardUIProps> = ({ machines, onControl, onSelectMachine }) => {

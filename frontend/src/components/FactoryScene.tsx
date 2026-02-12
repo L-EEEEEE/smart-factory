@@ -1,7 +1,7 @@
 import React from 'react';
 import { Canvas } from '@react-three/fiber';
-import { OrbitControls, GridHelper } from '@react-three/drei';
-import { Machine } from '../types';
+import { OrbitControls } from '@react-three/drei';
+import type { Machine } from '../types';
 import MachineUnit from './MachineUnit'; // 👈 분리한 컴포넌트 import
 
 interface FactorySceneProps {

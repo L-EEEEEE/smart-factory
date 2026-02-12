@@ -20,8 +20,7 @@ const Dashboard:React.FC<DashboardProps> = ({ onLogout }) => {
     const handleControl = async (id: string, command: string) => {
         const token = localStorage.getItem('token');
         try {
-            // 토큰이 있다면 헤더에 추가
-            const token = localStorage.getItem('token');
+            // 토큰이 있다면 헤더에 추가SS
             await fetch(`http://localhost:8080/api/machines/${id}/control`, {
                 method: 'POST',
                 headers: {
@@ -61,7 +60,6 @@ const Dashboard:React.FC<DashboardProps> = ({ onLogout }) => {
             {/* 🟧 레이어 2: 2D UI (헤더 + 카드) */}
             <DashboardUI
                 machines={machines}
-                isConnected={isConnected}
                 onControl={handleControl}
                 onSelectMachine={setSelectedMachine}
             />

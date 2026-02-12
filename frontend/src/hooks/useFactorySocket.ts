@@ -1,20 +1,7 @@
 import { useEffect, useState } from 'react';
 import SockJS from 'sockjs-client';
 import { Client } from '@stomp/stompjs';
-
-// 타입 정의
-export interface Machine {
-    id: string;
-    name: string;
-    type: string;
-    status: string;
-    temperature: number;
-    vibration: number;
-    rpm: number;
-    powerUsage: number;
-    productionCount: number;
-    lastMaintenance: string;
-}
+import type {Machine} from "../types.ts";
 
 export const useFactorySocket = () => {
     const [machines, setMachines] = useState<Machine[]>([]);
@@ -64,7 +51,7 @@ export const useFactorySocket = () => {
                 Authorization: `Bearer ${token}`,
             },
 
-            debug: (str) => {
+            debug: (_str) => {  // 생성은 해두지만 일단 사용안해서 언더바_변수명
                 // console.log(str);
             },
             onConnect: () => {
