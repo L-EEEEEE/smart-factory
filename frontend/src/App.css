@@ -266,3 +266,73 @@ button:disabled {
   color: white; /* 배경이 빨개지고 글씨는 하얗게 */
   box-shadow: 0 0 10px rgba(255, 107, 107, 0.5);
 }
+
+/* 전체 레이아웃 컨테이너 (Flexbox 사용) */
+.dashboard-layout {
+  display: flex;       /* 가로 배치 */
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;    /* 스크롤 방지 */
+  background-color: #0f1115; /* 전체 배경색 */
+}
+
+/* 우측 메인 컨텐츠 영역 */
+.main-content {
+  flex: 1;             /* 남은 공간 모두 차지 */
+  display: flex;
+  flex-direction: column; /* 헤더와 컨텐츠를 세로로 배치 */
+  position: relative;
+  height: 100%;
+}
+
+/* 헤더 스타일 조정 (기존 스타일 유지하되 위치 보정) */
+.header {
+  flex-shrink: 0;      /* 헤더 크기 고정 */
+  height: 60px;        /* 헤더 높이 명시 */
+  padding: 0 20px;
+  background: rgba(20, 20, 30, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  z-index: 10;
+}
+
+/* 1. 우측 메인 영역 컨테이너 (세로 배치 설정) */
+.content-area {
+  flex: 1;
+  display: flex;          /* Flex 모드 켜기 */
+  flex-direction: column; /* 요소들을 위->아래로 쌓기 */
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+/* 2. [상단] 3D 씬 레이어 */
+.scene-layer {
+  position: relative;     /* absolute 제거! 흐름에 맡김 */
+  width: 100%;
+  flex: 1;              /* 화면 비율 (숫자가 클수록 더 넓음) */
+  /* 예: flex: 1로 하면 정확히 5:5 반반 나누어짐 */
+  min-height: 300px;      /* 너무 작아지지 않도록 최소 높이 설정 */
+  background: radial-gradient(circle at center, #2b2b2b 0%, #000000 100%); /* 배경색 */
+  z-index: 1;
+}
+
+/* 3. [하단] 카드 UI 레이어 */
+/* DashboardUI.tsx 의 최상위 div 클래스 이름이 ui-layer 라고 가정 */
+.ui-layer {
+  position: relative;     /* absolute 제거 */
+  flex: 1;                /* 화면 비율 (나머지 차지) */
+  width: 100%;
+  background-color: #15171e; /* UI 영역 배경색 (어두운 회색) */
+  overflow-y: auto;       /* 카드가 많으면 스크롤 생기게 함 */
+  padding: 20px;
+  box-sizing: border-box; /* 패딩 포함 크기 계산 */
+  z-index: 2;
+
+  /* 기존에 있던 top, left, transform 속성이 있다면 모두 지워주세요! */
+  top: auto;
+  left: auto;
+  transform: none;
+}

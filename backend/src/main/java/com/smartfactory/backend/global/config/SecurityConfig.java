@@ -50,6 +50,8 @@ public class SecurityConfig {
                         .requestMatchers("/api/auth/**", "/ws-factory/**", "/api/machines/**").permitAll()
 
                         // 관리자 페이지는 ADMIN만
+                        .requestMatchers("/api/inventory/**").hasRole("ADMIN")
+                        .requestMatchers("/api/pricing/**").hasRole("ADMIN")
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
 
                         // 나머지는 인증 필요

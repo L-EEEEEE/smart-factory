@@ -1,0 +1,82 @@
+.sidebar {
+    width: 240px;          /* 열렸을 때 너비 */
+    height: 100vh;
+    background: #1a1c23;
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+
+    flex-shrink: 0;
+
+    transition: width 0.3s ease;
+    overflow: hidden;      /* 내용이 넘치면 숨김 */
+    white-space: nowrap;   /* 텍스트 줄바꿈 방지 */
+}
+
+/* 닫혔을 때 스타일 (클래스 추가됨) */
+.sidebar.collapsed {
+    width: 60px;           /* 닫혔을 때 너비 (아이콘만 보임) */
+    padding: 10px 5px;
+}
+
+/* 토글 버튼 스타일 */
+.sidebar-toggle {
+    display: flex;
+    justify-content: flex-end; /* 오른쪽 정렬 */
+    margin-bottom: 10px;
+}
+
+.toggle-btn {
+    background: transparent;
+    border: none;
+    color: #a0aec0;
+    cursor: pointer;
+    font-size: 1.2rem;
+    padding: 5px;
+}
+.toggle-btn:hover {
+    color: white;
+}
+
+/* 메뉴 아이템 스타일 */
+.sidebar-nav a {
+    display: flex;         /* 아이콘과 텍스트 가로 정렬 */
+    align-items: center;
+    height: 40px;          /* 높이 고정 */
+    color: #a0aec0;
+    text-decoration: none;
+    padding: 0 10px;
+    border-radius: 6px;
+    transition: background 0.2s;
+}
+
+.sidebar-nav a:hover, .sidebar-nav li.active a {
+    background: #2d3748;
+    color: #fff;
+}
+
+/* 아이콘과 텍스트 간격 */
+.menu-icon {
+    font-size: 1.2rem;
+    min-width: 24px;       /* 아이콘 영역 확보 */
+    display: flex;
+    justify-content: center;
+}
+
+.menu-title {
+    margin-left: 10px;
+    opacity: 1;
+    transition: opacity 0.2s;
+}
+
+/* 닫혔을 때 텍스트 완전히 숨기기 (선택 사항 - JS로 처리했지만 CSS로도 보강) */
+.sidebar.collapsed .menu-title {
+    opacity: 0;
+    width: 0;
+    display: none;
+}
+
+.sidebar.collapsed .sidebar-header h3 {
+    display: none;
+}
