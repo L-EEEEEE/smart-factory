@@ -44,14 +44,6 @@ const Sidebar: React.FC<SidebarProps> = ( { isOpen, toggleSidebar }) => {
                     ))}
                 </ul>
             </nav>
-
-            <div className="user-info">
-                {isOpen ? (
-                    <span>{role === 'ROLE_ADMIN' ? '관리자' : '사원'}</span>
-                ) : (
-                    <span title={role || ''}>👤</span>
-                )}
-            </div>
         </aside>
     );
 };
