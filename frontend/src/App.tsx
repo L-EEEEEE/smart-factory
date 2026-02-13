@@ -9,6 +9,7 @@ import './App.css';
 import Sidebar from "./components/Sidebar.tsx";
 import Header from "./components/Header.tsx";
 import { useFactorySocket } from "./hooks/useFactorySocket.ts";
+import ProductionPlan from "./components/ProductionPlan.tsx";
 
 const Pricing = () => <div style={{ padding: "20px", color: "white" }}><h2>단가표 관리 (관리자 전용)</h2></div>;
 
@@ -79,6 +80,16 @@ function App() {
                                 element={
                                     <ProtectedRoute>
                                         <MaterialList />
+                                    </ProtectedRoute>
+                                }
+                            />
+
+                            {/* ProductionPlan */}
+                            <Route
+                                path="/plan"
+                                element={
+                                    <ProtectedRoute>
+                                        <ProductionPlan />
                                     </ProtectedRoute>
                                 }
                             />

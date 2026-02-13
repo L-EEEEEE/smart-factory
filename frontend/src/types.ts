@@ -16,3 +16,19 @@ export interface Machine {
     productionCount: number;
     lastUpdated: string;
 }
+
+export interface Order {
+    id: string;
+    clientName: string;   // 거래처
+    productName: string;  // 품명
+    quantity: number;     // 주문 수량
+    dueDate: string;      // 납기일 (YYYY-MM-DD)
+    priorityMultiplier: number; // 거래처 중요도 (1: 보통, 1.5: 중요, 2: 긴급)
+    requiredMaterialId: string; // 필요한 자재 ID (단순화)
+}
+
+export interface Material {
+    id: string;
+    itemCode: string;
+    currentStock: number;
+}
