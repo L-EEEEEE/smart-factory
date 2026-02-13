@@ -32,9 +32,9 @@ const Dashboard: React.FC<DashboardProps> = ({ machines }) => {
 
             {/* 2. 하단: 제어 패널 및 카드 리스트 (나머지 영역) */}
             <div className="bottom-section">
-                <div className="section-title">
-                    <h3>📊 실시간 기계 상태</h3>
-                </div>
+                {/*<div className="section-title">*/}
+                {/*    <h3>📊 실시간 기계 상태</h3>*/}
+                {/*</div>*/}
                 <DashboardUI
                     machines={machines}
                     onControl={handleControl}
