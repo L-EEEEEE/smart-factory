@@ -25,7 +25,7 @@ public class MaterialService {
      * 자재 등록 (초기 데이터용)
      */
     @Transactional // 쓰기 작업이므로 readOnly = false
-    public Material createMaterial(String itemCode, String itemName, String category, int safetyStock, double unitPrice) {
+    public Material createMaterial(String itemCode, String itemName, String category, int safetyStock, double unitPrice, String unit, String supplier) {
         // 이미 존재하는 코드인지 확인
         if (materialRepository.findByItemCode(itemCode).isPresent()) {
             throw new IllegalArgumentException("이미 존재하는 품목 코드입니다: " + itemCode);
@@ -37,6 +37,9 @@ public class MaterialService {
         material.setCategory(category);
         material.setSafetyStock(safetyStock);
         material.setUnitPrice(unitPrice);
+        material.setUnit(unit);
+        material.setSupplier(supplier);
+
         material.setCurrentStock(0); // 초기 재고는 0
 
         return materialRepository.save(material);
@@ -78,7 +81,7 @@ public class MaterialService {
         history.setMaterial(material);
         history.setType(type);
         history.setQuantity(quantity);
-        history.setStockAfterTransaction(newStock); // ⭐ 스냅샷 저장
+        history.setStockAfterTransaction(newStock); // 스냅샷 저장
         history.setWorker(worker);
         history.setRemarks(remarks);
 

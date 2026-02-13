@@ -17,6 +17,11 @@ public class MaterialResponseDto {
     private int currentStock;
     private int safetyStock;
     private double unitPrice;
+
+    // 🏭 [추가] 이 두 필드가 있어야 프론트엔드에 표시됩니다!
+    private String unit;
+    private String supplier;
+
     private LocalDateTime updatedAt;
 
     // Entity -> DTO 변환 생성자
@@ -28,6 +33,11 @@ public class MaterialResponseDto {
         this.currentStock = material.getCurrentStock();
         this.safetyStock = material.getSafetyStock();
         this.unitPrice = material.getUnitPrice();
+
+        // 👇 DB에 있는 값을 DTO에 담아주는 핵심 코드
+        this.unit = material.getUnit();
+        this.supplier = material.getSupplier();
+
         this.updatedAt = material.getUpdatedAt();
     }
 }

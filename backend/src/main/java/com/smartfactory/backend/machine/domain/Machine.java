@@ -26,12 +26,12 @@ public class Machine {
     @Column(nullable = false)
     private String status; // RUNNING, WARNING, ERROR...
 
-    // 센서 데이터
-    private double temperature;
-    private double vibration;
-    private int rpm;
-    private double powerUsage;     // DB에는 power_usage로 되어 있어도 알아서 매핑됨 (CamelCase <-> snake_case)
-    private int productionCount;   // DB: production_count
+    private String client;     // 발주처 (고객사)
+    private String orderName;  // 주문명 (작업 이름)
 
-    private LocalDateTime lastMaintenance;
+    private double temperature;
+    private int rpm;
+    private double vibration;
+    private int productionCount;
+    private String lastUpdated;
 }

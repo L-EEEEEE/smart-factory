@@ -32,25 +32,5 @@ public class DataInitializer implements CommandLineRunner {
             memberRepository.save(admin);
             log.info("초기 최고 관리자 계정 생성 완료: admin / 1234");
         }
-
-        // 자재 데이터 초기화
-        if (materialRepository.count() == 0) {
-            createMaterial("MAT-001", "강철 프레임", "원자재", 100, 20, 50000);
-            createMaterial("PART-005", "고정용 볼트", "부품", 5000, 1000, 50);
-            createMaterial("MAT-002", "알루미늄 판", "원자재", 50, 10, 120000);
-            log.info("초기 자재 데이터 등록 완료");
-        }
     }
-
-    private void createMaterial(String code, String name, String category, int stock, int safety, double price) {
-        Material m = new Material();
-        m.setItemCode(code);
-        m.setItemName(name);
-        m.setCategory(category);
-        m.setCurrentStock(stock);
-        m.setSafetyStock(safety);
-        m.setUnitPrice(price);
-        materialRepository.save(m);
-    }
-
 }

@@ -1,227 +1,259 @@
-/* 대시보드 전체 컨테이너 */
+/* =========================================
+   1. 전체 레이아웃 구조
+   ========================================= */
 .dashboard-container {
     display: flex;
-    flex-direction: column; /* 위-아래 배치 */
-    height: 100%;           /* 부모 높이 꽉 채움 */
+    flex-direction: column;
+    height: 100vh;           /* 화면 전체 높이 사용 */
     background-color: #0f1115;
     color: #fff;
-    overflow: hidden;       /* 전체 스크롤 방지 */
+    overflow: hidden;        /* 전체 스크롤 방지 */
 }
 
-/* 1. 상단: 3D 씬 영역 */
+/* 상단: 3D 씬 영역 */
 .top-section {
-    flex: 1;                /* 남은 공간을 모두 3D가 차지함 */
+    flex: 1;                 /* 남은 공간 모두 차지 */
     position: relative;
     width: 100%;
-    min-height: 0;
     background: radial-gradient(circle at center, #2b2b2b 0%, #000000 100%);
     z-index: 1;
-    padding:20px;
+}
+
+/* 하단: 데이터 카드 영역 */
+.bottom-section {
+    height: 380px;           /* 카드 높이(약 260px) + 여백 고려 */
+    flex-shrink: 0;          /* 절대 줄어들지 않음 */
+    background-color: #14161d;
+    border-top: 1px solid #2d3436;
+    box-shadow: 0 -4px 20px rgba(0,0,0,0.5);
+    z-index: 10;
+    padding: 15px 20px;
     box-sizing: border-box;
 }
 
-/* 2. 하단: 데이터 카드 영역 */
-.bottom-section {
-    height: 300px;          /* 높이 고정 (카드 한 줄 들어갈 정도) */
-    flex-shrink: 0;         /* 3D 영역에 밀려 줄어들지 않도록 고정 */
-    display: flex;
-    flex-direction: column;
-    padding: 20px;
-    background-color: #14161d;
-    border-top: 1px solid #2d3436;
-    box-shadow: 0 -4px 20px rgba(0,0,0,0.5); /* 그림자 추가로 구분감 */
-    z-index: 10;
-}
-
-/* 섹션 제목 */
+/* 섹션 제목 (공정 시스템 등) */
 .section-title {
-    margin-bottom: 10px;
-    padding-left: 10px;
+    margin-bottom: 15px;
+    padding-left: 12px;
     border-left: 4px solid #3182ce;
 }
 
 .section-title h3 {
     margin: 0;
     color: #e2e8f0;
-    font-size: 1.2rem;
+    font-size: 1.1rem;
+    font-weight: 600;
 }
 
-/* 기존 DashboardUI 스타일 오버라이드 (레이어 제거) */
-/* 중요: DashboardUI.tsx를 감싸는 div의 클래스나 스타일을 초기화해야 함 */
+/* =========================================
+   2. 카드 그리드 (가로 스크롤)
+   ========================================= */
 .ui-layer {
-    position: static !important; /* absolute 제거 */
     width: 100%;
-    height: auto;
-    background: transparent;
-    padding: 0;
+    height: 100%;
 }
 
-/* 그리드 레이아웃 (카드 배치) */
 .grid-layout {
-    display: flex;             /* 가로 배치 */
-    flex-direction: row;       /* 가로 방향 */
-    gap: 20px;                 /* 카드 사이 간격 */
-    overflow-x: auto;          /* 가로 스크롤 허용 */
-    overflow-y: hidden;        /* 세로 스크롤 방지 */
-    padding-bottom: 10px;      /* 스크롤바 공간 확보 */
-    height: 100%;              /* 부모 높이 맞춤 */
-    align-items: center;       /* 세로 중앙 정렬 */
-    pointer-events: auto;      /* 카드 클릭 가능하게 설정 */
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    overflow-x: auto;        /* 가로 스크롤 활성화 */
+    overflow-y: hidden;
+    padding-bottom: 10px;    /* 스크롤바 공간 */
+    align-items: stretch;    /* 카드 높이 동일하게 맞춤 */
 }
 
-/* 카드 스타일 미세 조정 */
+/* 스크롤바 커스텀 */
+.grid-layout::-webkit-scrollbar { height: 8px; }
+.grid-layout::-webkit-scrollbar-track { background: #1a1c23; border-radius: 4px; }
+.grid-layout::-webkit-scrollbar-thumb { background: #4a5568; border-radius: 4px; }
+.grid-layout::-webkit-scrollbar-thumb:hover { background: #718096; }
+
+
+/* =========================================
+   3. 기계 카드 스타일 (핵심)
+   ========================================= */
 .card {
-    flex: 0 0 280px;           /* 카드가 찌그러지지 않게 너비 고정 (280px) */
-    min-width: 300px;
-    height: 220px;             /* 카드 높이 적절히 고정 */
+    /* 레이아웃 */
+    flex: 0 0 280px;         /* 너비 고정 (찌그러짐 방지) */
+    display: flex;
+    flex-direction: column;  /* 내부 요소 세로 정렬 */
+
+    /* 디자인 */
     background-color: #1e272e;
-    border: 1px solid #2d3748;
-    margin: 0;                 /* 불필요한 마진 제거 */
-
-    /* 카드 내부 스크롤 방지 */
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-}
-
-/* 스크롤바 디자인 (크롬/엣지/사파리) */
-.grid-layout::-webkit-scrollbar {
-    height: 5px;               /* 가로 스크롤바 두께 */
-}
-.grid-layout::-webkit-scrollbar-track {
-    background: #1a1c23;
-    border-radius: 4px;
-}
-.grid-layout::-webkit-scrollbar-thumb {
-    background: #4a5568;
-    border-radius: 4px;
-}
-.grid-layout::-webkit-scrollbar-thumb:hover {
-    background: #718096;
-}
-
-/* 모달 오버레이 */
-.modal-overlay {
-    position: fixed;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background-color: rgba(0, 0, 0, 0.8);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 9999;
-}
-
-.card {
-    min-width: 200px; /* 카드가 찌그러지지 않도록 최소 너비 고정 */
-    background-color: var(--card-bg);
     border-radius: 12px;
-    padding: 1rem;
+    padding: 16px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    border: 1px solid #2d3748;
     transition: transform 0.2s, box-shadow 0.2s;
-    border: 1px solid transparent;
+    position: relative;
+    overflow: hidden; /* 내부 내용 넘침 방지 */
 }
 
 .card:hover {
     transform: translateY(-5px);
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+    border-color: #4a5568;
 }
 
-/* 상태별 테두리 색상 */
+/* 상태별 왼쪽 테두리 */
 .card.running { border-left: 5px solid #00b894; }
 .card.warning { border-left: 5px solid #fdcb6e; animation: pulse 1s infinite; }
 .card.error { border-left: 5px solid #d63031; animation: shake 0.5s; }
-.card.stopped { border-left: 5px solid #636e72; opacity: 0.7; }
+.card.stopped { border-left: 5px solid #636e72; opacity: 0.8; }
 
+/* ----------------------------------
+   카드 내부: 헤더 (이름 + 뱃지 + 주문정보)
+   ---------------------------------- */
+.card-header {
+    display: flex;
+    flex-direction: column; /* 위아래 배치 */
+    gap: 10px;
+    margin-bottom: 12px;
+}
 
+.header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
 
-/* 더 작은 글씨는 더 작게 */
-.metric span {
-    font-size: 0.75rem !important;
+.card-header h3 {
+    margin: 0;
+    font-size: 1rem;
+    color: #fff;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 160px;
+}
+
+.status-badge {
+    font-size: 0.75rem;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-weight: bold;
+    text-transform: uppercase;
+    color: #fff;
+}
+/* 뱃지 색상 */
+.status-badge.running { background-color: #00b894; }
+.status-badge.stopped { background-color: #636e72; }
+.status-badge.error { background-color: #d63031; }
+
+/* PCB 파운드리 주문 정보 (Client/Job) */
+.order-info {
+    padding-top: 8px;
+    border-top: 1px dashed #4a5568;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.info-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.8rem;
+}
+
+.info-row .label {
+    color: #63b3ed;
+    font-weight: 600;
+}
+
+.info-row .value {
+    color: #cbd5e0;
+    text-align: right;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 160px;
+}
+
+/* ----------------------------------
+   카드 내부: 데이터 바디 (온도, RPM 등)
+   ---------------------------------- */
+.card-body {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* 2열 배치 */
+    gap: 12px;
+    background: rgba(0, 0, 0, 0.2);
+    padding: 10px;
+    border-radius: 8px;
+    margin-bottom: 12px;
 }
 
 .metric {
     display: flex;
     flex-direction: column;
+    align-items: flex-start;
 }
 
 .metric span {
-    font-size: 0.8rem;
-    color: #a4b0be;
-    margin-bottom: 0.3rem;
+    font-size: 0.75rem;
+    color: #a0aec0;
+    margin-bottom: 2px;
+    text-transform: uppercase;
 }
 
 .metric strong {
-    font-size: 1.2rem;
+    font-size: 1rem;
+    color: #edf2f7;
     font-weight: 600;
 }
 
+/* ----------------------------------
+   카드 내부: 버튼 영역 (Start/Stop)
+   ---------------------------------- */
 .card-actions {
-    margin-top: 1.5rem;
     display: flex;
-    gap: 0.5rem;
+    gap: 8px;
 }
 
-button {
+.card-actions button {
     flex: 1;
-    padding: 0.5rem;
+    padding: 8px 0;
     border: none;
     border-radius: 4px;
-    background-color: var(--text-secondary);
-    color: white;
-    cursor: pointer;
+    font-size: 0.85rem;
     font-weight: bold;
-    transition: background 0.2s;
+    cursor: pointer;
+    transition: all 0.2s;
+    color: white;
+    background-color: #4a5568;
 }
 
-button:hover:not(:disabled) {
-    background-color: var(--text-primary);
+.card-actions button:hover:not(:disabled) {
+    background-color: #3182ce;
+    transform: translateY(-1px);
 }
 
-button:disabled {
-    background-color: #2d3436;
+.card-actions button:disabled {
+    background-color: #2d3748;
+    color: #718096;
     cursor: not-allowed;
-    opacity: 0.5;
+    opacity: 0.6;
 }
 
 .reset-btn {
-    background-color: #636e72;
+    background-color: #4a5568 !important;
+}
+.reset-btn:hover {
+    background-color: #718096 !important;
 }
 
-.card-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1rem;
-}
-
-.badge {
-    background: rgba(255, 255, 255, 0.1);
-    padding: 0.2rem 0.6rem;
-    border-radius: 4px;
-    font-size: 0.8rem;
-}
-
-.card-body {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1rem;
-}
-
-/* 카드 내부의 모든 글자 크기를 줄임 */
-.card h3, .card span, .card strong {
-    font-size: 0.7em !important; /* 0.9배로 축소 */
-}
-
-/* 애니메이션 */
+/* =========================================
+   4. 애니메이션
+   ========================================= */
 @keyframes pulse {
     0% { box-shadow: 0 0 0 0 rgba(253, 203, 110, 0.7); }
-    70% { box-shadow: 0 0 0 10px rgba(253, 203, 110, 0); }
+    70% { box-shadow: 0 0 0 6px rgba(253, 203, 110, 0); }
     100% { box-shadow: 0 0 0 0 rgba(253, 203, 110, 0); }
 }
+
 @keyframes shake {
-    0% { transform: translateX(0); }
-    25% { transform: translateX(-5px); }
-    50% { transform: translateX(5px); }
-    75% { transform: translateX(-5px); }
-    100% { transform: translateX(0); }
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-4px); }
+    75% { transform: translateX(4px); }
 }

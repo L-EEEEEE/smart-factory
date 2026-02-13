@@ -23,6 +23,8 @@ export interface Material {
     safetyStock: number;
     unitPrice: number;
     updatedAt: string;
+    unit: string;
+    supplier: string;
 }
 
 // 자재 이력 데이터 (MaterialHistoryResponseDto)
@@ -43,6 +45,7 @@ export interface CreateMaterialRequest {
     category: string;
     safetyStock: number;
     unitPrice: number;
+    supplier: string;
 }
 
 // 트랜잭션 요청 (TransactionRequestDto)

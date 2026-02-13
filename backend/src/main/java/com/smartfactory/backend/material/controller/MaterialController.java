@@ -54,7 +54,9 @@ public class MaterialController {
                 request.getItemName(),
                 request.getCategory(),
                 request.getSafetyStock(),
-                request.getUnitPrice()
+                request.getUnitPrice(),
+                request.getUnit(),
+                request.getSupplier()
         );
         return ResponseEntity.ok(ApiResponse.success(new MaterialResponseDto(material)));
     }
