@@ -10,7 +10,7 @@
 
 /* 1. 상단: 3D 씬 영역 */
 .top-section {
-    flex: 1.2;                /* 남은 공간을 모두 3D가 차지함 */
+    flex: 1;                /* 남은 공간을 모두 3D가 차지함 */
     position: relative;
     width: 100%;
     min-height: 0;
@@ -22,7 +22,7 @@
 
 /* 2. 하단: 데이터 카드 영역 */
 .bottom-section {
-    height: 250px;          /* 높이 고정 (카드 한 줄 들어갈 정도) */
+    height: 300px;          /* 높이 고정 (카드 한 줄 들어갈 정도) */
     flex-shrink: 0;         /* 3D 영역에 밀려 줄어들지 않도록 고정 */
     display: flex;
     flex-direction: column;
@@ -86,7 +86,7 @@
 
 /* 스크롤바 디자인 (크롬/엣지/사파리) */
 .grid-layout::-webkit-scrollbar {
-    height: 8px;               /* 가로 스크롤바 두께 */
+    height: 5px;               /* 가로 스크롤바 두께 */
 }
 .grid-layout::-webkit-scrollbar-track {
     background: #1a1c23;
