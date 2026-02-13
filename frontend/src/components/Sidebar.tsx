@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { getUserRole } from '../api/auth';
+import { getUserRole } from '../api/authApi.ts';
 import { MENU_ITEMS } from '../constants/MenuItem';
 import './Sidebar.css';
 

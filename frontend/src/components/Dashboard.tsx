@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import FactoryScene from './FactoryScene';
 import DashboardUI from './DashboardUI';
 import { MachineHistoryModal } from './MachineHistoryModal';
-import { sendMachineCommand } from '../api/machineApi';
+import { sendMachineCommand } from '../api/machineApi.ts';
 import type { Machine } from "../types";
 import './Dashboard.css';
 

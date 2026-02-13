@@ -1,4 +1,4 @@
-import { getToken } from './auth';
+import { getToken } from './authApi.ts';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080';
 
@@ -19,4 +19,22 @@ export const sendMachineCommand = async (machineId: string, command: string) => 
     }
 
     return await response.text(); // 성공 시 메시지 반환
+};
+
+// 기계 목록 조회 (초기 데이터 로딩용)
+export const fetchMachines = async () => {
+    const token = getToken();
+    const response = await fetch(`${API_URL}/api/machines`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': token ? `Bearer ${token}` : ''
+        },
+    });
+
+    if (!response.ok) {
+        throw new Error(`Failed to fetch machines: ${response.statusText}`);
+    }
+
+    return await response.json(); // 기계 목록 배열 반환
 };

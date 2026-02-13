@@ -4,7 +4,7 @@ import Dashboard from './components/Dashboard';
 import Login from './components/Login';
 import ProtectedRoute from './components/ProtectedRoute';
 import MaterialList from './components/MaterialList';
-import { getToken, logoutApi } from './api/auth';
+import { getToken, logoutApi } from './api/authApi.ts';
 import './App.css';
 import Sidebar from "./components/Sidebar.tsx";
 import Header from "./components/Header.tsx";
@@ -18,7 +18,7 @@ function App() {
     const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
     // 소켓은 로그인 된 상태에서만 연결하는 것이 좋으므로 조건부 처리 가능 (선택사항)
-    const { machines, isConnected } = useFactorySocket();
+    const { machines, isConnected } = useFactorySocket(isAuthenticated);
 
     useEffect(() => {
         const token = getToken();

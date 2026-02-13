@@ -1,41 +1,35 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import SockJS from 'sockjs-client';
 import { Client } from '@stomp/stompjs';
-import type {Machine} from "../types.ts";
+import { getToken } from '../api/authApi.ts';
+import { fetchMachines } from '../api/machineApi.ts';
+import type {Machine} from "../types";
 
-export const useFactorySocket = () => {
+export const useFactorySocket = (enabled:boolean) => {
     const [machines, setMachines] = useState<Machine[]>([]);
     const [isConnected, setIsConnected] = useState(false);
+    const clientRef = useRef<Client | null>(null);
 
     useEffect(() => {
-        // 0. [로그인 체크] 로컬 스토리지에서 토큰 가져오기
-        const token = localStorage.getItem('token');
+        const token = getToken();
 
-        if (!token) {
+        if (!enabled || !token) {
             console.warn("🔒 로그인이 필요합니다. (토큰 없음)");
             return; // 토큰이 없으면 연결 시도하지 않음
+        }
+
+        if (clientRef.current?.connected) {
+            return;
         }
 
         // 1. [초기 데이터] REST API 요청 시 토큰 실어 보내기
         const fetchInitialData = async () => {
             try {
-                const response = await fetch('/api/machines', {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}` // 👈 핵심: 토큰 추가
-                    }
-                });
-
-                if (response.ok) {
-                    const data = await response.json();
-                    console.log("초기 데이터 로드 완료:", data);
-                    setMachines(data);
-                } else {
-                    console.error("초기 데이터 로드 실패 (권한 없음 또는 에러)");
-                }
+                const data = await fetchMachines();
+                setMachines(data);
+                console.log("초기 데이터 로드 완료");
             } catch (error) {
-                console.error("초기 데이터 로드 중 네트워크 오류:", error);
+                console.error("초기 데이터 로드 실패:", error);
             }
         };
 
@@ -77,14 +71,17 @@ export const useFactorySocket = () => {
                 console.log('WebSocket Disconnected');
                 setIsConnected(false);
             },
+
         });
 
         stompClient.activate();
 
+        clientRef.current = stompClient;
+
         return () => {
             stompClient.deactivate();
         };
-    }, []); // 빈 배열: 컴포넌트 마운트 시 한 번만 실행
+    }, [enabled]); // 빈 배열: 컴포넌트 마운트 시 한 번만 실행
 
     return { machines, isConnected };
 };

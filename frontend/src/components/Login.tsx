@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { loginApi } from '../api/auth';
+import { loginApi } from '../api/authApi.ts';
 import './Login.css'; // 스타일 파일 별도 분리 (아래 3번 참고)
 
 interface LoginProps {

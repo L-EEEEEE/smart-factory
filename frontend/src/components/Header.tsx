@@ -1,5 +1,5 @@
 import React from 'react';
-import { getUserRole, getUsername } from '../api/auth';
+import { getUserRole, getUsername } from '../api/authApi.ts';
 import './Header.css'; // 스타일 분리 추천
 
 interface HeaderProps {

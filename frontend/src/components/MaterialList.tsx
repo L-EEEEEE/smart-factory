@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { fetchMaterials, type Material } from '../api/materialApi';
-import { getUserRole } from '../api/auth';
+import { getUserRole } from '../api/authApi.ts';
 import '../App.css';
 
 const MaterialList: React.FC = () => {
