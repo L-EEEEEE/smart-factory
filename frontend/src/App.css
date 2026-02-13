@@ -1,95 +1,111 @@
-/* src/App.css */
-/* 전체 화면 컨테이너 (세로 정렬: 헤더 + 메인) */
-.app-root {
-  display: flex;
-  flex-direction: column;
-  height: 100vh; /* 화면 전체 높이 사용 */
-  background-color: #1a1c23; /* 전체 배경색 통일 */
-  color: #fff;
-}
-
-/* 헤더 아래 영역 (가로 정렬: 사이드바 + 콘텐츠) */
-.main-container {
-  display: flex;
-  flex: 1; /* 남은 공간 모두 차지 */
-  overflow: hidden; /* 전체 화면 스크롤 방지 */
-}
-
-/* 우측 메인 영역 컨테이너 */
-.content-area {
-  flex: 1;
-  position: relative; /* 자식(absolute)의 기준점 */
-  width: 100%;
-  height: 100%;
-  overflow: hidden;   /* 자식이 튀어나가지 않게 */
-  padding: 0;         /* 패딩 제거 (3D가 꽉 차게) */
-  background-color: #000; /* 기본 배경 검정 */
-}
-
+/* =========================================
+   변수 및 기본 설정 (Variables & Reset)
+   ========================================= */
 :root {
-  --bg-color: #1a1a2e;
+  --bg-color: #0f1115;       /* 전체 배경 */
   --card-bg: #16213e;
   --text-primary: #e94560;
   --text-secondary: #0f3460;
+  --text-light: #fff;
+  --text-muted: #a0aec0;
   --accent: #533483;
+  --border-color: rgba(255, 255, 255, 0.1);
+  --header-height: 60px;     /* 헤더 높이 변수 */
 }
 
 body {
   margin: 0;
   background-color: var(--bg-color);
-  color: white;
+  color: var(--text-light);
   font-family: 'Inter', sans-serif;
+  overflow: hidden; /* 브라우저 기본 스크롤 제거 */
 }
 
-.dashboard-container {
-  width: 100%;
-  height: 100%;
+/* =========================================
+   전체 레이아웃 (App.js 구조 기반)
+   ========================================= */
+
+/* [최상위] 화면 전체 컨테이너 (세로 정렬: Header + MainContainer) */
+.app-root {
   display: flex;
   flex-direction: column;
-  background-color: #0f1115;
+  height: 100vh;
+  width: 100vw;
+  background-color: var(--bg-color);
   overflow: hidden;
 }
 
-.header {
+/* [중간] 헤더 아래 영역 (가로 정렬: Sidebar + Content) */
+.main-container {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 2rem;
-  border-bottom: 2px solid var(--text-secondary);
-  padding-bottom: 1rem;
+  flex: 1; /* 헤더를 제외한 나머지 높이를 모두 차지 */
+  overflow: hidden;
+  position: relative;
 }
 
-.status-indicator {
-  padding: 0.5rem 1rem;
-  border-radius: 20px;
-  font-weight: bold;
-  font-size: 0.9rem;
+/* [우측] 실제 콘텐츠가 표시되는 영역 */
+.content-area {
+  flex: 1;             /* 남은 가로 공간 모두 차지 */
+  position: relative;  /* 3D 씬(absolute)의 기준점 */
+  width: 100%;
+  height: 100%;
+  overflow: hidden;    /* 내부 스크롤은 자식에게 위임 */
+  padding: 0;
+  background-color: #000; /* 3D 배경 기본값 */
+
+  display: flex;       /* 내부 요소(Routes) 꽉 채우기 */
+  flex-direction: column;
 }
 
-.status-indicator.online {
-  background-color: #00b894; /* 녹색 */
-  color: black;
-  box-shadow: 0 0 10px #00b894;
+/* =========================================
+   3D Scene & UI Layers (Dashboard용)
+   ========================================= */
+
+/* [Layer 1] 3D Canvas (가장 뒤) */
+.scene-layer {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  z-index: 0;
+  background: radial-gradient(circle at center, #2b2b2b 0%, #000000 100%);
 }
 
-.status-indicator.offline {
-  background-color: #d63031; /* 빨간색 */
-  color: white;
+/* [Layer 2] 화면 위 UI 컨트롤 (중간) */
+.ui-layer {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  z-index: 10;
+  pointer-events: none; /* 빈 공간 클릭 시 뒤의 3D 조작 가능 */
+
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end; /* 아래쪽 정렬 */
+  padding: 20px;
+  box-sizing: border-box;
 }
 
-/* 모달 배경 (어둡게 처리) */
+/* UI 레이어 내부의 버튼/카드는 클릭 가능해야 함 */
+.ui-layer > * {
+  pointer-events: auto;
+}
+
+/* =========================================
+   모달 (차트 및 팝업용)
+   ========================================= */
+/* z-index: 1000으로 설정하여 사이드바, 헤더, 3D보다 위에 뜸 */
+
 .modal-overlay {
   position: fixed;
   top: 0; left: 0; right: 0; bottom: 0;
-  background-color: rgba(0, 0, 0, 0.7);
+  background-color: rgba(0, 0, 0, 0.7); /* 배경 어둡게 */
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1000;
+  z-index: 1000; /* 최상위 레벨 */
   backdrop-filter: blur(5px);
 }
 
-/* 모달 내용 박스 */
 .modal-content {
   background-color: #1e272e;
   padding: 2rem;
@@ -99,46 +115,17 @@ body {
   box-shadow: 0 10px 25px rgba(0,0,0,0.5);
   border: 1px solid #485460;
   animation: slideUp 0.3s ease-out;
+  display: flex;
+  flex-direction: column;
 }
 
 .modal-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
   border-bottom: 1px solid #485460;
   padding-bottom: 1rem;
-}
-
-.close-btn {
-  /* 1. 크기 강제 고정 (가로 세로 똑같이) */
-  width: 36px;
-  height: 36px;
-  flex: none;
-
-  /* 2. 중앙 정렬 (X 표시가 정가운데 오도록) */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  /* 3. 디자인 다듬기 */
-  background: transparent;
-  border: 1px solid rgba(255, 255, 255, 0.2); /* 얇은 테두리 추가 (선택사항) */
-  border-radius: 50%; /* 50%를 주면 완전한 원이 됩니다 */
-  font-size: 1.5rem;
-  color: #a4b0be;
-  cursor: pointer;
-  padding: 0; /* 불필요한 여백 제거 */
-  transition: all 0.2s ease;
-}
-
-/* 마우스 올렸을 때 효과 */
-.close-btn:hover {
-  background-color: #ff6b6b;
-  border-color: #ff6b6b;
-  color: white;
-  transform: rotate(90deg); /* 뱅글 도는 애니메이션 */
-  box-shadow: 0 0 10px rgba(255, 107, 107, 0.5); /* 빛나는 효과 */
 }
 
 .chart-container {
@@ -153,93 +140,44 @@ body {
   color: #808e9b;
 }
 
+/* 닫기 버튼 */
+.close-btn {
+  width: 36px; height: 36px;
+  display: flex; align-items: center; justify-content: center;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  font-size: 1.5rem;
+  color: #a4b0be;
+  cursor: pointer;
+  padding: 0;
+  transition: all 0.2s ease;
+}
+
+.close-btn:hover {
+  background-color: #ff6b6b;
+  border-color: #ff6b6b;
+  color: white;
+  transform: rotate(90deg);
+}
+
 @keyframes slideUp {
   from { transform: translateY(20px); opacity: 0; }
   to { transform: translateY(0); opacity: 1; }
 }
 
-/* 전체 레이아웃 컨테이너 (Flexbox 사용) */
-.dashboard-layout {
-  display: flex;       /* 가로 배치 */
-  width: 100vw;
-  height: 100vh;
-  overflow: hidden;    /* 스크롤 방지 */
-  background-color: #0f1115; /* 전체 배경색 */
-}
+/* =========================================
+   자재 목록 및 테이블 (Inventory Style)
+   ========================================= */
 
-/* 우측 메인 컨텐츠 영역 */
-.main-content {
-  flex: 1;             /* 남은 공간 모두 차지 */
-  display: flex;
-  flex-direction: column; /* 헤더와 컨텐츠를 세로로 배치 */
-  position: relative;
-  height: 100%;
-}
-
-/* 헤더 스타일 조정 (기존 스타일 유지하되 위치 보정) */
-.header {
-  flex-shrink: 0;      /* 헤더 크기 고정 */
-  height: 60px;        /* 헤더 높이 명시 */
-  padding: 0 20px;
-  background: rgba(20, 20, 30, 0.9);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  z-index: 10;
-}
-
-/* 우측 메인 영역 컨테이너 (세로 배치 설정) */
-.content-area {
-  flex: 1;
-  display: flex;          /* Flex 모드 켜기 */
-  flex-direction: column; /* 요소들을 위->아래로 쌓기 */
-  height: 100%;
-  position: relative;
-  overflow: hidden;
-}
-
-/* [상단] 3D 씬 레이어 */
-.scene-layer {
-  position: absolute;  /* 절대 위치로 변경 */
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;        /* 부모 높이 전체 사용 */
-  z-index: 0;          /* 가장 뒤로 보냄 */
-  background: radial-gradient(circle at center, #2b2b2b 0%, #000000 100%);
-}
-
-/* [하단] 카드 UI 레이어 */
-.ui-layer {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 10;
-  pointer-events: none; /* 빈 공간 클릭 시 3D 조작 가능 */
-
-  /* 핵심: 내용물을 아래로 정렬 */
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  padding: 0 20px 20px 20px; /* 좌우, 아래 여백 */
-}
-
-/* UI 내부의 실제 카드들은 클릭 가능해야 함 */
-.ui-layer > * {
-  pointer-events: auto;
-}
-
-/* 재고관리 화면 */
-/* 컨테이너 */
 .material-list-container {
   padding: 20px;
   color: #fff;
   height: 100%;
   display: flex;
   flex-direction: column;
+  box-sizing: border-box;
+  background-color: var(--bg-color); /* 배경색 명시 */
 }
 
 .list-header {
@@ -249,13 +187,13 @@ body {
   margin-bottom: 20px;
 }
 
-/* 테이블 디자인 */
 .table-wrapper {
   flex: 1;
-  overflow-y: auto; /* 데이터 많으면 스크롤 */
+  overflow-y: auto;
   background: #1a1c23;
   border-radius: 8px;
   padding: 10px;
+  border: 1px solid var(--border-color);
 }
 
 .dark-table {
@@ -267,11 +205,12 @@ body {
 .dark-table th {
   text-align: left;
   padding: 12px 15px;
-  color: #a0aec0;
+  color: var(--text-muted);
   border-bottom: 1px solid #2d3748;
   position: sticky;
   top: 0;
-  background: #1a1c23; /* 헤더 고정 시 배경 필요 */
+  background: #1a1c23;
+  z-index: 5;
 }
 
 .dark-table td {
@@ -283,28 +222,10 @@ body {
   background-color: #2d3748;
 }
 
-/* 재고 부족 시 강조 스타일 */
-.row-danger {
-  background-color: rgba(229, 62, 62, 0.1); /* 붉은 배경 은은하게 */
-}
-.row-danger:hover {
-  background-color: rgba(229, 62, 62, 0.2);
-}
-.text-danger {
-  color: #fc8181;
-  font-weight: bold;
-}
-.text-success {
-  color: #68d391;
-}
-
-/* 뱃지 스타일 */
-.badge {
-  background: #4a5568;
-  padding: 2px 8px;
-  border-radius: 4px;
-  font-size: 0.8rem;
-}
+/* 상태 표시 */
+.row-danger { background-color: rgba(229, 62, 62, 0.1); }
+.text-danger { color: #fc8181; font-weight: bold; }
+.text-success { color: #68d391; }
 
 .status-badge {
   padding: 4px 8px;
@@ -312,17 +233,10 @@ body {
   font-size: 0.75rem;
   font-weight: bold;
 }
-.status-badge.success {
-  background-color: #22543d;
-  color: #68d391;
-}
-.status-badge.danger {
-  background-color: #742a2a;
-  color: #fc8181;
-  animation: pulse 2s infinite; /* 깜빡임 효과 */
-}
+.status-badge.success { background-color: #22543d; color: #68d391; }
+.status-badge.danger { background-color: #742a2a; color: #fc8181; animation: pulse 2s infinite; }
 
-/* 버튼 스타일 */
+/* 버튼 */
 .primary-btn {
   background-color: #3182ce;
   color: white;
@@ -331,27 +245,157 @@ body {
   border-radius: 4px;
   cursor: pointer;
 }
-.primary-btn:hover {
-  background-color: #2b6cb0;
-}
+.primary-btn:hover { background-color: #2b6cb0; }
 
 .sm-btn {
-  background: transparent;
-  border: 1px solid #4a5568;
-  color: #cbd5e0;
-  padding: 4px 8px;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 0.8rem;
+  background: transparent; border: 1px solid #4a5568;
+  color: #cbd5e0; padding: 4px 8px;
+  border-radius: 4px; cursor: pointer; font-size: 0.8rem; margin-right: 5px;
 }
-.sm-btn:hover {
-  border-color: #a0aec0;
-  color: #fff;
-}
+.sm-btn:hover { border-color: var(--text-muted); color: #fff; }
 
-/* 깜빡임 애니메이션 */
 @keyframes pulse {
   0% { opacity: 1; }
   50% { opacity: 0.6; }
   100% { opacity: 1; }
+}
+
+/* 입고 버튼 (녹색) */
+.btn-green {
+  border: 1px solid #2ecc71;
+  color: #2ecc71;
+  transition: all 0.2s;
+}
+.btn-green:hover {
+  background-color: #2ecc71;
+  color: white;
+}
+
+/* 출고 버튼 (붉은색) */
+.btn-red {
+  border: 1px solid #e74c3c;
+  color: #e74c3c;
+  margin-left: 8px; /* 버튼 사이 간격 */
+  transition: all 0.2s;
+}
+.btn-red:hover {
+  background-color: #e74c3c;
+  color: white;
+}
+
+/* 로딩/에러 텍스트 중앙 정렬 */
+.loading-text, .error-text {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  font-size: 1.2rem;
+  color: #a0aec0;
+}
+.error-text {
+  color: #fc8181;
+}
+
+/* =========================================
+   모달 내부 폼 스타일 (추가)
+   ========================================= */
+
+/* 모달 내부 텍스트 정렬 및 배치 */
+.modal-content h3 {
+  margin-top: 0;
+  color: #fff;
+  border-bottom: 1px solid #485460;
+  padding-bottom: 15px;
+  margin-bottom: 20px;
+}
+
+/* 라벨과 인풋을 감싸는 그룹 */
+.form-group {
+  display: flex;
+  flex-direction: column; /* 라벨 아래에 인풋 배치 */
+  margin-bottom: 1.5rem;  /* 그룹 간 간격 */
+  text-align: left;
+}
+
+/* 라벨 스타일 */
+.form-group label {
+  color: #d2dae2;
+  font-weight: 600;
+  margin-bottom: 8px; /* 라벨과 인풋 사이 간격 */
+  font-size: 0.95rem;
+}
+
+/* 읽기 전용 텍스트 (대상 자재 이름 등) */
+.form-group p {
+  margin: 0;
+  padding: 10px;
+  background-color: #2d3436;
+  border-radius: 6px;
+  color: #fab1a0; /* 강조 색상 */
+  font-weight: bold;
+}
+
+/* 입력창 스타일 (Input, Textarea) */
+.form-input {
+  background-color: #0f1115;
+  border: 1px solid #485460;
+  border-radius: 6px;
+  padding: 12px;
+  color: white;
+  font-size: 1rem;
+  outline: none;
+  transition: border-color 0.2s;
+  width: 100%; /* 가로 꽉 채우기 */
+  box-sizing: border-box; /* 패딩 포함 크기 계산 */
+}
+
+.form-input:focus {
+  border-color: #3182ce; /* 포커스 시 파란 테두리 */
+}
+
+/* 비고란 (Textarea) 전용 */
+textarea.form-input {
+  resize: vertical; /* 세로 크기 조절만 허용 */
+  min-height: 80px;
+  font-family: inherit;
+}
+
+/* 모달 하단 버튼 영역 */
+.modal-actions {
+  display: flex;
+  justify-content: flex-end; /* 오른쪽 정렬 */
+  gap: 12px; /* 버튼 사이 간격 */
+  margin-top: 10px;
+  padding-top: 20px;
+  border-top: 1px solid #485460;
+}
+
+/* 취소 버튼 */
+.btn-cancel {
+  background-color: #4b6584;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.2s;
+}
+.btn-cancel:hover {
+  background-color: #778ca3;
+}
+
+/* 확인(입고) 버튼 */
+.btn-confirm {
+  background-color: #20bf6b; /* 녹색 계열 */
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.2s;
+}
+.btn-confirm:hover {
+  background-color: #26de81;
 }
