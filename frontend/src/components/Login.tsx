@@ -49,7 +49,9 @@ const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
                         />
                     </div>
 
-                    {error && <p className="error-msg">{error}</p>}
+                    <p className="error-msg">
+                        {error || " "} {/* 에러가 없으면 공백(" ")을 넣어 높이 유지 */}
+                    </p>
 
                     <button type="submit" className="login-btn">
                         LOGIN

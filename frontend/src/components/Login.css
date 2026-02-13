@@ -74,7 +74,17 @@
 .error-msg {
     color: #ff6b6b;
     font-size: 0.9rem;
-    margin-bottom: 1rem;
+    text-align: center; /* 에러 메시지 가운데 정렬 */
+
+    /* ⭐ 핵심: 공간 미리 확보 */
+    height: 24px;       /* 글자 크기 + 줄간격 정도의 높이로 고정 */
+    line-height: 24px;  /* 텍스트 수직 중앙 정렬 */
+    margin-bottom: 10px; /* 버튼과의 간격 고정 */
+
+    /* (선택 사항) 글자가 길어져도 레이아웃을 깨지 않으려면 */
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 }
 
 .demo-info {
