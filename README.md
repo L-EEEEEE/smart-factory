@@ -1,5 +1,6 @@
 # 🏭 React Smart Factory System (MES & APS)
 
+![Collaborator](https://img.shields.io/badge/Co--Pilot-Gemini%20Pro-4E86F8?style=flat-square&logo=google-gemini&logoColor=white)
 ![Project Status](https://img.shields.io/badge/Status-Active-success)
 ![Version](https://img.shields.io/badge/Version-1.0.0-blue)
 ![Tech](https://img.shields.io/badge/Built%20With-React%20%7C%20TypeScript-61DAFB)
@@ -44,6 +45,14 @@
 ---
 
 ## 🛠️ 기술 스택 (Tech Stack)
+
+### 🤖 AI-Assisted Development
+본 프로젝트는 **AI(Gemini)**를 적극 활용하여 개발 효율성을 높였습니다.
+
+* **Architectural Design:** 초기 백엔드 폴더 구조 및 데이터 흐름 설계 검토
+* **Code Refactoring:** 중복 코드 제거 및 컴포넌트 최적화 (`useMemo`, `useEffect` 의존성 관리 등)
+* **Bug Tracking:** 복잡한 비동기 처리 및 상태 관리(State Management) 로직 디버깅
+* **Documentation:** Mermaid 차트 생성 및 README 문서화 자동화 지원
 
 | 구분 | 기술 | 설명 |
 | :--- | :--- | :--- |
